@@ -33,7 +33,7 @@ try {
 
     $result = $cracker->crackWithStrategy('numeric');
 
-    echo json_encode($result);
+    echo json_encode($result, JSON_PRETTY_PRINT);
 
 } catch (Exception $e) {
     echo json_encode(['error' => $e->getMessage()]);
