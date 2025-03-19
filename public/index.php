@@ -5,11 +5,15 @@ use App\Repositories\UserRepository;
 use App\Services\DatabaseFactory;
 use App\Services\PasswordCracker;
 use App\Services\PasswordHasher;
+use App\Strategies\DictionaryWordStrategy;
 use App\Strategies\NumericPasswordStrategy;
 use App\Strategies\ThreeCharWithNumberStrategy;
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
+
+// Dictionary file path
+$dictionaryFile = __DIR__ . '/../dictionary.txt';
 
 header('Content-Type: application/json');
 
@@ -29,11 +33,13 @@ try {
 // Create password cracker
     $cracker = new PasswordCracker();
 
+
 // Add strategies
     $cracker->addStrategy(new NumericPasswordStrategy($hasher, $userRepository));
     $cracker->addStrategy(new ThreeCharWithNumberStrategy($hasher, $userRepository));
+    $cracker->addStrategy(new DictionaryWordStrategy($hasher, $userRepository, $dictionaryFile));
 
-    $result = $cracker->crackWithStrategy('three_char_with_number');
+    $result = $cracker->crackWithStrategy('dictionary');
 
     echo json_encode($result, JSON_PRETTY_PRINT);
 
