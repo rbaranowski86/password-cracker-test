@@ -6,7 +6,7 @@ use App\Interfaces\PasswordCrackerStrategy;
 use App\Services\PasswordHasher;
 use App\Interfaces\DatabaseInterface;
 
-class ThreeCharWithNumberStrategyAssorted implements \App\Interfaces\PasswordCrackerStrategy
+class ThreeCharWithNumberAssortedStrategy implements \App\Interfaces\PasswordCrackerStrategy
 {
     private PasswordHasher $hasher;
     private DatabaseInterface $userRepository;
