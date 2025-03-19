@@ -2,6 +2,7 @@
 
 namespace App\Services;
 use App\Interfaces\PasswordCrackerStrategy;
+use Exception;
 
 class PasswordCracker
 {
@@ -13,10 +14,13 @@ class PasswordCracker
         $this->strategies[$strategy->getName()] = $strategy;
     }
 
+    /**
+     * @throws Exception
+     */
     public function crackWithStrategy(string $strategyName): array
     {
         if (!isset($this->strategies[$strategyName])) {
-            throw new \Exception("Strategy not found: $strategyName");
+            throw new Exception("Strategy not found: $strategyName");
         }
 
         $result = $this->strategies[$strategyName]->crack();
@@ -29,6 +33,9 @@ class PasswordCracker
         return $result;
     }
 
+    /**
+     * @throws Exception
+     */
     public function crackAll(): array
     {
         $results = [];

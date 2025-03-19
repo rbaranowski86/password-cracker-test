@@ -6,6 +6,7 @@ use App\Services\DatabaseFactory;
 use App\Services\PasswordCracker;
 use App\Services\PasswordHasher;
 use App\Strategies\NumericPasswordStrategy;
+use App\Strategies\ThreeCharWithNumberStrategy;
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
@@ -30,8 +31,9 @@ try {
 
 // Add strategies
     $cracker->addStrategy(new NumericPasswordStrategy($hasher, $userRepository));
+    $cracker->addStrategy(new ThreeCharWithNumberStrategy($hasher, $userRepository));
 
-    $result = $cracker->crackWithStrategy('numeric');
+    $result = $cracker->crackWithStrategy('three_char_with_number');
 
     echo json_encode($result, JSON_PRETTY_PRINT);
 
