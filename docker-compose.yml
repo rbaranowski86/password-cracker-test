@@ -11,18 +11,16 @@ services:
       - php
       - mysql
 
-  php:
-    image: composer:latest
+  pphp:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
     container_name: php-fpm
     volumes:
       - .:/var/www/html:z
       - ./docker/php/php.ini:/usr/local/etc/php/php.ini:z
     depends_on:
       - mysql
-    command: >
-      sh -c "docker-php-ext-install pdo pdo_mysql &&
-             composer install --no-interaction --optimize-autoloader &&
-             php-fpm"
 
   mysql:
     image: mysql:8.0
