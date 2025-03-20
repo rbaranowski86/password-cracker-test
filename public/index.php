@@ -6,6 +6,7 @@ use App\Services\DatabaseFactory;
 use App\Services\PasswordCracker;
 use App\Services\PasswordHasher;
 use App\Strategies\DictionaryWordStrategy;
+use App\Strategies\MixedCharPasswordStrategy;
 use App\Strategies\NumericPasswordStrategy;
 use App\Strategies\ThreeCharWithNumberStrategy;
 
@@ -38,8 +39,11 @@ try {
     $cracker->addStrategy(new NumericPasswordStrategy($hasher, $userRepository));
     $cracker->addStrategy(new ThreeCharWithNumberStrategy($hasher, $userRepository));
     $cracker->addStrategy(new DictionaryWordStrategy($hasher, $userRepository, $dictionaryFile));
+    $foundPasswords = $cracker->getFoundPasswords();
+    $cracker->addStrategy(new MixedCharPasswordStrategy($hasher, $userRepository, 6, $foundPasswords));
 
-    $result = $cracker->crackWithStrategy('dictionary');
+
+    $result = $cracker->crackWithStrategy('mixed');
 
     echo json_encode($result, JSON_PRETTY_PRINT);
 
