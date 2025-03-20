@@ -23,6 +23,9 @@ To run thisproject, ensure your system meets the following requirements:
 
 ### 2. Project installation:
 ```shell
+git clone git@github.com:rbaranowski86/password-cracker-test.git rbaranowski-test
+cd rbaranowski-test
+cp .env.example .env
 docker-compose up -d
 ```
 
