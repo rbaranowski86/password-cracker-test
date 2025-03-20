@@ -18,6 +18,7 @@ $dotenv->load();
 
 // Dictionary file path
 $dictionaryFile = __DIR__ . '/../dictionary.txt';
+$answersFile = __DIR__ . '/../answers.txt';
 
 // API endpoint for password cracking
 if (isset($_GET['action'])) {
@@ -72,6 +73,11 @@ if (isset($_GET['action'])) {
 
             case 'all':
                 $result = $cracker->crackAll();
+                break;
+
+            case 'answers':
+                $cracker->addStrategy(new DictionaryWordStrategy($hasher, $userRepository, $answersFile));
+                $result = $cracker->crackWithStrategy('dictionary');
                 break;
 
             default:
