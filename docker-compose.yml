@@ -12,7 +12,7 @@ services:
       - mysql
 
   php:
-    image: php:8.2-fpm
+    image: composer:latest
     container_name: php-fpm
     volumes:
       - .:/var/www/html:z
@@ -20,7 +20,9 @@ services:
     depends_on:
       - mysql
     command: >
-      sh -c "docker-php-ext-install pdo pdo_mysql && php-fpm"
+      sh -c "docker-php-ext-install pdo pdo_mysql &&
+             composer install --no-interaction --optimize-autoloader &&
+             php-fpm"
 
   mysql:
     image: mysql:8.0
