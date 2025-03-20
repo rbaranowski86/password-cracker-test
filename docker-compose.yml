@@ -1,0 +1,54 @@
+services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:z
+      - .:/var/www/html:z
+    depends_on:
+      - php
+      - mysql
+
+  php:
+    image: php:8.2-fpm
+    container_name: php-fpm
+    volumes:
+      - .:/var/www/html:z
+      - ./docker/php/php.ini:/usr/local/etc/php/php.ini:z
+    depends_on:
+      - mysql
+    command: >
+      sh -c "docker-php-ext-install pdo pdo_mysql && php-fpm"
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_USERNAME}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql:z
+      - ./not_so_smart_users.sql:/docker-entrypoint-initdb.d/init.sql:z
+    command: --init-file=/docker-entrypoint-initdb.d/init.sql
+
+  node:
+    image: node:latest
+    container_name: node
+    working_dir: /app
+    volumes:
+      - ./frontend:/app:z
+    command:  sh -c "npm update && npm run dev"
+    ports:
+      - "5173:5173"
+    depends_on:
+      - nginx
+
+volumes:
+  mysql_data:

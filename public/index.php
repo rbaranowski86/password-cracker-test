@@ -22,6 +22,7 @@ $answersFile = __DIR__ . '/../answers.txt';
 
 // API endpoint for password cracking
 if (isset($_GET['action'])) {
+    header('Access-Control-Allow-Origin: *');
     header('Content-Type: application/json');
 
     try {
