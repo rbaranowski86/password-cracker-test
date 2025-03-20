@@ -101,7 +101,7 @@ class ThreeCharWithNumberAssortedStrategy implements \App\Interfaces\PasswordCra
 
     public function getName(): string
     {
-        return 'three_char_with_number_assorted';
+        return 'three_char_assorted';
     }
 
 }

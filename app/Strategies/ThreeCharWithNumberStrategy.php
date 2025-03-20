@@ -68,6 +68,6 @@ class ThreeCharWithNumberStrategy implements PasswordCrackerStrategy
 
     public function getName(): string
     {
-        return 'three_char_with_number';
+        return 'three_char';
     }
 }

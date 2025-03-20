@@ -1,4 +1,6 @@
 <?php
+@ini_set('memory_limit', '-1');
+@ini_set('max_execution_time', 0);
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Repositories\UserRepository;
@@ -8,6 +10,7 @@ use App\Services\PasswordHasher;
 use App\Strategies\DictionaryWordStrategy;
 use App\Strategies\MixedCharPasswordStrategy;
 use App\Strategies\NumericPasswordStrategy;
+use App\Strategies\ThreeCharWithNumberAssortedStrategy;
 use App\Strategies\ThreeCharWithNumberStrategy;
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
@@ -40,9 +43,9 @@ if (isset($_GET['action'])) {
 // Add strategies
         $cracker->addStrategy(new NumericPasswordStrategy($hasher, $userRepository));
         $cracker->addStrategy(new ThreeCharWithNumberStrategy($hasher, $userRepository));
+        $cracker->addStrategy(new ThreeCharWithNumberAssortedStrategy($hasher, $userRepository));
         $cracker->addStrategy(new DictionaryWordStrategy($hasher, $userRepository, $dictionaryFile));
-        $foundPasswords = $cracker->getFoundPasswords();
-        $cracker->addStrategy(new MixedCharPasswordStrategy($hasher, $userRepository);
+        $cracker->addStrategy(new MixedCharPasswordStrategy($hasher, $userRepository));
 // Process the request
         $result = [];
 
@@ -52,7 +55,11 @@ if (isset($_GET['action'])) {
                 break;
 
             case 'three_char':
-                $result = $cracker->crackWithStrategy('three_char_with_number');
+                $result = $cracker->crackWithStrategy('three_char');
+                break;
+
+            case 'three_char_assorted':
+                $result = $cracker->crackWithStrategy('three_char_assorted');
                 break;
 
             case 'dictionary':
@@ -60,18 +67,11 @@ if (isset($_GET['action'])) {
                 break;
 
             case 'mixed':
-                // Add the mixed strategy with found passwords
-                $foundPasswords = $cracker->getFoundPasswords();
-                $cracker->addStrategy(new MixedCharPasswordStrategy($hasher, $userRepository, 6, $foundPasswords));
                 $result = $cracker->crackWithStrategy('mixed');
                 break;
 
             case 'all':
-                // Add the mixed strategy with found passwords after other strategies have run
                 $result = $cracker->crackAll();
-                $foundPasswords = $cracker->getFoundPasswords();
-                $cracker->addStrategy(new MixedCharPasswordStrategy($hasher, $userRepository, 6, $foundPasswords));
-                $result['mixed'] = $cracker->crackWithStrategy('mixed');
                 break;
 
             default:

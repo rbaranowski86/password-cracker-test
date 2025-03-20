@@ -23,14 +23,7 @@ class PasswordCracker
             throw new Exception("Strategy not found: $strategyName");
         }
 
-        $result = $this->strategies[$strategyName]->crack();
-
-        // Store found passwords
-        foreach ($result['cracked'] as $crackedPassword) {
-            $this->foundPasswords[$crackedPassword['user_id']] = $crackedPassword['password'];
-        }
-
-        return $result;
+        return $this->strategies[$strategyName]->crack();
     }
 
     /**
@@ -45,10 +38,5 @@ class PasswordCracker
         }
 
         return $results;
-    }
-
-    public function getFoundPasswords(): array
-    {
-        return $this->foundPasswords;
     }
 }
