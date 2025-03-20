@@ -14,9 +14,5 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
-# Skrypt startowy, który wykonuje composer install i uruchamia php-fpm
-COPY docker/php/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
-
-ENTRYPOINT ["docker-entrypoint.sh"]
-CMD ["php-fpm"]
+# Domyślna komenda
+CMD bash -c "if [ -f composer.json ]; then composer install --no-interaction --optimize-autoloader; fi && php-fpm"
