@@ -12,11 +12,11 @@ class MixedCharPasswordStrategy implements PasswordCrackerStrategy
     private DatabaseInterface $userRepository;
 
     private const CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    private const LENGTH = 6;
 
     public function __construct(
         PasswordHasher $hasher,
-        DatabaseInterface $userRepository,
-        int $length = 6
+        DatabaseInterface $userRepository
     ) {
         $this->hasher = $hasher;
         $this->userRepository = $userRepository;
@@ -36,7 +36,7 @@ class MixedCharPasswordStrategy implements PasswordCrackerStrategy
         }
 
         // Generate combinations and check hashes
-        foreach ($this->generateCombinations(6, self::CHARSET) as $word) {
+        foreach ($this->generateCombinations(self::LENGTH, self::CHARSET) as $word) {
             $hash = $this->hasher->hash($word);
 
             if (isset($userPasswords[$hash])) {
